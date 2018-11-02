@@ -6,35 +6,13 @@ window.adopisowifi.config([
 
     $stateProvider
       .state({
-        name: 'login',
-        url: '/login',
-        templateUrl: 'login/login.html'
-      })
-      .state({
-        name: 'register',
-        url: '/register',
-        templateUrl: 'register/register.html'
-      })
-      .state({
-        name: 'resend_confirmation',
-        url: '/resend-confirmation',
-        templateUrl: 'resend-confirmation/resend-confirmation.html'
-      })
-      .state({
-        name: 'reset_password',
-        url: '/reset-password',
-        templateUrl: 'reset-password/reset-password.html'
-      })
-
-    // dashboard routes
-      .state({
         abstract: true,
         name: 'dashboard',
         url: '/dashboard',
         templateUrl: 'dashboard/dashboard.html',
         resolve: {
           user: [
-            'Auth',
+            'adoAuth',
             function (Auth) {
               return Auth.check();
             }

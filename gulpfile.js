@@ -14,7 +14,7 @@ const clean = require('gulp-clean')
 const serve = require('gulp-serve')
 
 const VENDOR_JS = [
-  './node_modules/file-saver/FileSaver.js',
+  //'./node_modules/file-saver/FileSaver.js',
   './node_modules/moment/moment.js',
   './node_modules/angular/angular.js',
   './node_modules/angular-cookies/angular-cookies.js',
@@ -29,11 +29,11 @@ const VENDOR_JS = [
   './src/js/libs/ladda/spin.min.js',
   './src/js/libs/ladda/ladda.min.js',
   './node_modules/angular-ladda/dist/angular-ladda.js',
-  //'./node_modules/socket.io-client/dist/socket.io.js',
-  //'./node_modules/angular-socket-io/socket.js',
+  './node_modules/angular-environment/dist/angular-environment.js',
   './node_modules/angular-xeditable/dist/js/xeditable.js',
   './node_modules/angular-loading-bar/build/loading-bar.js',
   './node_modules/angular-recaptcha/release/angular-recaptcha.js',
+  './node_modules/ado-ng-auth/dist/ado-ng-auth.js',
 ]
 
 const APP_JS = [
@@ -61,8 +61,17 @@ const APP_SCSS = [
   './src/**/*.scss'
 ]
 
+const PHP_FILES = [
+  './src/**/*.php'
+]
+
 gulp.task('clean:dist', () => {
   return gulp.src('./dist', {read: false}).pipe(clean())
+})
+
+gulp.task('copy:php', ['clean:dist'], () => {
+  return gulp.src(PHP_FILES)
+    .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('js:hint', () => {
@@ -87,7 +96,7 @@ gulp.task('js:build', ['clean:dist', 'js:hint'], () => {
 
 gulp.task('templates', ['clean:dist'], () => {
   let hash = randomstring.generate()
-  return gulp.src('./src/views/**/*.html')
+  return gulp.src(['./src/views/**/*.html'])
     .pipe(templateCache({
       filename: `templates-${hash}.js`,
       module: 'AdoPisoWiFi.CommunityForum'
@@ -127,14 +136,8 @@ gulp.task('copy:fonts', ['clean:dist'], () => {
     .pipe(gulp.dest('./dist/fonts'))
 })
 
-
-gulp.task('index.html', ['clean:dist'], () => {
-  return gulp.src('./src/index.{html,php}')
-    .pipe(gulp.dest('./dist'))
-})
-
-gulp.task('build', ['copy:images', 'copy:fonts', 'js:build', 'index.html', 'templates', 'vendor:css', 'app:sass'], () => {
-  let target = gulp.src('./dist/index.{html,php}')
+gulp.task('build', ['copy:php', 'copy:images', 'copy:fonts', 'js:build', 'templates', 'vendor:css', 'app:sass'], () => {
+  let target = gulp.src('./dist/**/*.{html,php}')
   // It's not necessary to read the files (will speed up things), we're only after their paths:
   let sources = gulp.src(['./dist/**/*.js', './dist/**/*.css'], {read: false})
 

@@ -10,5 +10,7 @@ window.adopisowifi = angular.module('AdoPisoWiFi.CommunityForum', [
   'toastr',
   'xeditable',
   'angular-loading-bar',
-  'vcRecaptcha'
+  'vcRecaptcha',
+  'ado.auth',
 ]);
+
