@@ -2,9 +2,16 @@
 window.adopisowifi.config([
   '$urlRouterProvider',
   '$stateProvider',
-  function($urlRouterProvider, $stateProvider) {
+  '$locationProvider',
+  function($urlRouterProvider, $stateProvider, $locationProvider) {
 
     $stateProvider
+      .state({
+        name: 'post',
+        url: '/post/',
+        templateUrl: 'post.html'
+      })
+
       .state({
         abstract: true,
         name: 'dashboard',
@@ -25,6 +32,7 @@ window.adopisowifi.config([
         templateUrl: 'dashboard/index.html'
       });
 
+    $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise('/');
 
   }

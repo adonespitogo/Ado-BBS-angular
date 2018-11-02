@@ -1,20 +1,14 @@
 <?php
-require("./php/helpers/env.php");
+
+require('./php/helpers/env.php');
+require("./php/partials/header.php");
 
 $posts_data = file_get_contents($API_BASE_URL."/api/forum/posts.json");
 $json_data = json_decode($posts_data);
 
-?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Ado Community Forum</title>
-<?php
 echo "<script>window.posts_data = ".$posts_data."; console.log(window.posts_data);</script>";
 ?>
 
-    <!-- inject:css -->
-    <!-- endinject -->
   </head>
 
   <body>
@@ -30,7 +24,7 @@ echo "<script>window.posts_data = ".$posts_data."; console.log(window.posts_data
           $formatted_created_at = date("F d, Y - g:i A", $created_at);
           echo "<li>";
             echo "<p>";
-            echo "<a href=\"/php/view_post.php?post_id=".$post->id."&topic=".$post->slug."\">";
+            echo "<a href=\"/post/?post_id=".$post->id."&topic=".$post->slug."&page=1\">";
             echo $post->title;
             echo "<br>";
             echo "</a>";

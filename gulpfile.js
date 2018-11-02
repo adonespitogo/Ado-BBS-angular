@@ -65,13 +65,13 @@ const PHP_FILES = [
   './src/**/*.php'
 ]
 
+const FILES_COPY_AS_IS = [
+  './src/**/*.php',
+  './src/.htaccess'
+]
+
 gulp.task('clean:dist', () => {
   return gulp.src('./dist', {read: false}).pipe(clean())
-})
-
-gulp.task('copy:php', ['clean:dist'], () => {
-  return gulp.src(PHP_FILES)
-    .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('js:hint', () => {
@@ -136,7 +136,11 @@ gulp.task('copy:fonts', ['clean:dist'], () => {
     .pipe(gulp.dest('./dist/fonts'))
 })
 
-gulp.task('build', ['copy:php', 'copy:images', 'copy:fonts', 'js:build', 'templates', 'vendor:css', 'app:sass'], () => {
+gulp.task('copy', ['clean:dist', 'copy:images', 'copy:fonts'], () => {
+  return gulp.src(FILES_COPY_AS_IS).pipe(gulp.dest('./dist'));
+})
+
+gulp.task('build', ['copy', 'js:build', 'templates', 'vendor:css', 'app:sass'], () => {
   let target = gulp.src('./dist/**/*.{html,php}')
   // It's not necessary to read the files (will speed up things), we're only after their paths:
   let sources = gulp.src(['./dist/**/*.js', './dist/**/*.css'], {read: false})
@@ -147,7 +151,7 @@ gulp.task('build', ['copy:php', 'copy:images', 'copy:fonts', 'js:build', 'templa
 })
 
 gulp.task('watch', function() {
-  gulp.watch('./src/**/*', ['build']);
+  gulp.watch(['./src/.htaccess', './src/**/*'], ['build']);
 })
 
 gulp.task('serve', ['build'], serve({
