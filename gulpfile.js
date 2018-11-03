@@ -99,7 +99,7 @@ gulp.task('templates', ['clean:dist'], () => {
   return gulp.src(['./src/views/**/*.html'])
     .pipe(templateCache({
       filename: `templates-${hash}.js`,
-      module: 'AdoPisoWiFi.CommunityForum'
+      module: 'AdoBBS'
     }))
     .pipe(gulp.dest('./dist/js/'))
 })
@@ -151,7 +151,12 @@ gulp.task('build', ['copy', 'js:build', 'templates', 'vendor:css', 'app:sass'], 
 })
 
 gulp.task('watch', function() {
-  gulp.watch(['./src/.htaccess', './src/**/*'], ['build']);
+  gulp.watch([
+    './src/.htaccess',
+    './src/**/*',
+    APP_JS,
+    APP_SCSS
+  ], ['build']);
 })
 
 gulp.task('serve', ['build'], serve({

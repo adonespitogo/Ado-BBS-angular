@@ -1,4 +1,4 @@
-window.adopisowifi.service('Account', [
+angular.module('AdoBBS').service('Account', [
   '$http',
   '$auth',
   function ($http, $auth) {

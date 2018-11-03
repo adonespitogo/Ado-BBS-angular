@@ -13,6 +13,7 @@ echo "<script>window.posts_data = ".$posts_data."; console.log(window.posts_data
 
   <body>
     <div ui-view>
+      <a href="/dashboard">Dash</a>
       <?php
 
         echo "<h1>Welcome to Ado Community Forum</h1>";
@@ -28,7 +29,7 @@ echo "<script>window.posts_data = ".$posts_data."; console.log(window.posts_data
             echo $post->title;
             echo "<br>";
             echo "</a>";
-            echo "<small>Posted by: ".$post->author->fname." ".$post->author->lname." on ".$formatted_created_at."</small>";
+            echo "<small>Posted by: ".$post->user->fname." ".$post->user->lname." on ".$formatted_created_at."</small>";
             echo "</p>";
           echo "</li>"; 
         }

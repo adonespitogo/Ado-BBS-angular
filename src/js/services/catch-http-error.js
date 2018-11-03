@@ -1,10 +1,9 @@
-window.adopisowifi
-  .service('CatchHttpError', [
+angular.module('AdoBBS')
+  .service('catchHttpError', [
     'toastr',
     '$q',
-    '$state',
-    function(toastr, $q, $state) {
-      return function CatchHttpError(res) {
+    function(toastr, $q) {
+      return function catchHttpError(res) {
 
         if (res.status === 401 || res.status === 403) return;
 

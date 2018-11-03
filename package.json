@@ -20,7 +20,7 @@
   "homepage": "https://bitbucket.org/adonesp/adopisowifi-forum#readme",
   "dependencies": {
     "@uirouter/angularjs": "^1.0.18",
-    "ado-ng-auth": "^1.0.8",
+    "ado-ng-auth": "^1.2.0",
     "angular": "^1.7.0",
     "angular-animate": "^1.7.2",
     "angular-cookie": "^4.1.0",

@@ -20,7 +20,7 @@ $page_title = $json_data->title;
 require("../php/partials/header.php");
 
 echo "<script type='text/javascript'>";
-  echo "window.post_data = ".$post_data.";";
+  echo "window.post_data_".$json_data->id." = ".$post_data.";";
   echo "window.comments_page = ".$page.";";
 echo "</script>";
 ?>
@@ -41,8 +41,8 @@ echo "</script>";
 
         foreach($json_data->comments as $comment) {
           echo "<li>";
-          echo "<a href='/user/?user_id=".$comment->author->id."'>";
-            echo $comment->author->fname." ".$comment->author->lname;
+          echo "<a href='/user/?user_id=".$comment->user->id."'>";
+            echo $comment->user->fname." ".$comment->user->lname;
           echo "</a>";
           echo "<div>";
           echo $comment->body;
@@ -54,7 +54,7 @@ echo "</script>";
       ?>
     </div>
 
-  <!-- injeect:js -->
+  <!-- inject:js -->
   <!-- endinject -->
 
   </body>
