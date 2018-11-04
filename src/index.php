@@ -3,10 +3,10 @@
 require('./php/helpers/env.php');
 require("./php/partials/header.php");
 
-$posts_data = file_get_contents($API_BASE_URL."/api/forum/posts.json");
+$posts_data = file_get_contents($env->api_base_url."/api/forum/posts.json");
 $json_data = json_decode($posts_data);
 
-echo "<script>window.posts_data = ".$posts_data."; console.log(window.posts_data);</script>";
+echo "<script>window.posts_data = ".$posts_data.";</script>";
 ?>
 
   </head>

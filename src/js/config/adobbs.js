@@ -2,30 +2,33 @@ angular.module('AdoBBS')
   .config(['adoAuthConfigProvider', 'envServiceProvider', function (adoAuthConfigProvider, envServiceProvider) {
 
     adoAuthConfigProvider.set({
-      cors: true, // if rails api is in diferrent domain, defaults to true
+      cors: <% cors %>, // if rails api is in diferrent domain, defaults to true
       loginSuccessRedirectState: 'dashboard.index',
     });
 
     envServiceProvider.config({
       domains: {
-        development: ['localhost', '127.0.0.1'],
-        production: ['forum.adopisowifi.com'], // set to your domain, can be ignored if you don't use cors
+        development: ['<% domain %>', '127.0.0.1'],
+        production: ['<% production.domain %>'],
       },
       vars: {
         development: {
           prod: false,
-          apiBaseUrl: 'http://localhost:8000', // your local Ado-BBS rails engine url
-          recaptcha_public_key: '6LcjW28UAAAAADaLbROztkzHAqPTzmFhtwVwNiVu' // your local recaptcha public key
+          apiBaseUrl: '<% development.api_base_url %>',
+          apiForumUri: '<% development.api_forum_uri %>',
+          recaptcha_public_key: '<% development.recaptcha_public_key %>'
         },
         production: {
           prod: true,
-          apiBaseUrl: 'https://adopisowifi.herokuapp.com', // your production server
-          recaptcha_public_key: '6LchBGYUAAAAANWc6a-Xp6hkptv9alGEQNVY1vPQ' // your production recaptcha public key
+          apiBaseUrl: '<% production.api_base_url %>',
+          apiForumUri: '<% production.api_forum_uri %>',
+          recaptcha_public_key: '<% production.recaptcha_public_key %>'
         },
         defaults: {
           prod: false,
-          apiBaseUrl: 'https://localhost:8000',
-          recaptcha_public_key: '6LcjW28UAAAAADaLbROztkzHAqPTzmFhtwVwNiVu'
+          apiBaseUrl: '<% api_base_url %>',
+          apiForumUri: '<% api_forum_uri %>',
+          recaptcha_public_key: '<% recaptcha_public_key %>'
         }
       }
     });

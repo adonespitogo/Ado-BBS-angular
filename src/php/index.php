@@ -1,3 +1,3 @@
 <?php
-  require('./helpers/redirect_home.php');
+  require(__DIR__.'/helpers/redirect_home.php');
 ?>

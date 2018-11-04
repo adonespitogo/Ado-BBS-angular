@@ -1,27 +1,3 @@
-#DirectoryIndex index.php
-#ErrorDocument 404 /
-
-#RewriteEngine on
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteRule . / [L,R=301]
-
-#ErrorDocument 404 /index.php
-
-# HTML5 pushstate support
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteRule ^ / [L]
-
-#RewriteEngine on
-## html5 pushstate (history) support:
-#<ifModule mod_rewrite.c>
-#RewriteEngine On
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteCond %{REQUEST_URI} !index
-#RewriteRule (.*) /index.php [L]
-#</ifModule>
-
 Options +FollowSymLinks
 IndexIgnore */*
 RewriteEngine On

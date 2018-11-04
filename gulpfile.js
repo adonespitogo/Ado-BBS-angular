@@ -12,9 +12,11 @@ const randomstring = require('randomstring')
 const sourcemaps = require('gulp-sourcemaps')
 const clean = require('gulp-clean')
 const serve = require('gulp-serve')
+const replace = require('gulp-replace')
+
+const config = require('./src/config.json');
 
 const VENDOR_JS = [
-  //'./node_modules/file-saver/FileSaver.js',
   './node_modules/moment/moment.js',
   './node_modules/angular/angular.js',
   './node_modules/angular-cookies/angular-cookies.js',
@@ -24,12 +26,11 @@ const VENDOR_JS = [
   './node_modules/@uirouter/angularjs/release/angular-ui-router.js',
   './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
   './node_modules/ng-token-auth/dist/ng-token-auth.js',
-  './node_modules/angular-animate/angular-animate.js',
   './node_modules/angular-toastr/dist/angular-toastr.tpls.js',
   './src/js/libs/ladda/spin.min.js',
   './src/js/libs/ladda/ladda.min.js',
   './node_modules/angular-ladda/dist/angular-ladda.js',
-  './node_modules/angular-environment/dist/angular-environment.js',
+  './node_modules/angular-env/dist/angular-environment.js',
   './node_modules/angular-xeditable/dist/js/xeditable.js',
   './node_modules/angular-loading-bar/build/loading-bar.js',
   './node_modules/angular-recaptcha/release/angular-recaptcha.js',
@@ -47,6 +48,17 @@ const APP_JS = [
   './src/js/directives/**/*.js',
 ]
 
+const APP_JS_LINT = [
+  './.tmp/js/init.js',
+  './.tmp/js/app.js',
+  './.tmp/js/routes.js',
+  './.tmp/js/config/**/*.js',
+  './.tmp/js/controllers/**/*.js',
+  './.tmp/js/services/**/*.js',
+  './.tmp/js/filters/**/*.js',
+  './.tmp/js/directives/**/*.js',
+]
+
 const VENDOR_CSS = [
   './node_modules/bootstrap/dist/css/bootstrap.css',
   './node_modules/bootstrap/dist/css/bootstrap-theme.css',
@@ -62,28 +74,63 @@ const APP_SCSS = [
 ]
 
 const PHP_FILES = [
-  './src/**/*.php'
+  './src/**/*.php',
 ]
 
 const FILES_COPY_AS_IS = [
-  './src/**/*.php',
-  './src/.htaccess'
+  './src/.htaccess',
+  './src/config.json',
 ]
 
+function replaceVars(stream) {
+  var pattern = /<%(.*)%>/g;
+  return stream.pipe(replace(pattern, function (match) {
+
+    var cfg = process.env.NODE_ENV == 'production' ? config.production : config.development
+    var configArr = match.replace('<%', '').replace('%>', '').trim().split('.')
+    var result;
+
+    if(configArr[0] === 'development' || configArr[0] === 'production') {
+      result = config[configArr[0]]
+      configArr.shift()
+    } else
+      result = cfg
+
+    for (var x=0; x < configArr.length; x++) {
+      result = result[configArr[x]]
+
+      if (result === undefined) {
+        //console.log("Config not found: " + match + " from " + this.file.relative)
+        return match;
+      }
+      if (typeof result == 'string') return result
+
+    }
+    return result
+  }))
+}
+
 gulp.task('clean:dist', () => {
-  return gulp.src('./dist', {read: false}).pipe(clean())
+  return gulp.src(['./dist', '.tmp'], {read: false}).pipe(clean())
 })
 
-gulp.task('js:hint', () => {
-  return gulp.src(APP_JS)
+gulp.task('js:inject:config', ['clean:dist'], () => {
+  return replaceVars(gulp.src('./src/**/*.js'))
+    .pipe(gulp.dest('.tmp'))
+})
+
+gulp.task('jslint', ['js:inject:config'], () => {
+  return gulp.src(APP_JS_LINT)
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 })
 
-gulp.task('js:build', ['clean:dist', 'js:hint'], () => {
+gulp.task('js:build', ['clean:dist', 'js:inject:config', 'jslint'], () => {
   let hash = randomstring.generate()
-  let stream = gulp.src(VENDOR_JS.concat(APP_JS))
+  let stream = gulp.src(VENDOR_JS.concat(['.tmp/js/**/*.js']))
     .pipe(sourcemaps.init())
+
+  //stream = replaceVars(stream)
     .pipe(concat(`app-${hash}.js`))
 
   if (process.env.NODE_ENV == 'production')
@@ -102,6 +149,11 @@ gulp.task('templates', ['clean:dist'], () => {
       module: 'AdoBBS'
     }))
     .pipe(gulp.dest('./dist/js/'))
+})
+
+gulp.task('php', ['clean:dist'], () => {
+  return replaceVars(gulp.src(PHP_FILES))
+    .pipe(gulp.dest('./dist'))
 })
 
 // start css
@@ -140,7 +192,7 @@ gulp.task('copy', ['clean:dist', 'copy:images', 'copy:fonts'], () => {
   return gulp.src(FILES_COPY_AS_IS).pipe(gulp.dest('./dist'));
 })
 
-gulp.task('build', ['copy', 'js:build', 'templates', 'vendor:css', 'app:sass'], () => {
+gulp.task('build', ['copy', 'php', 'js:build', 'templates', 'vendor:css', 'app:sass'], () => {
   let target = gulp.src('./dist/**/*.{html,php}')
   // It's not necessary to read the files (will speed up things), we're only after their paths:
   let sources = gulp.src(['./dist/**/*.js', './dist/**/*.css'], {read: false})
