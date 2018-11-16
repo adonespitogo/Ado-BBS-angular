@@ -4,6 +4,7 @@ angular.module('AdoBBS')
     adoAuthConfigProvider.set({
       cors: <% cors %>, // if rails api is in diferrent domain, defaults to true
       loginSuccessRedirectState: 'dashboard.index',
+      accountCreatedRedirect: '/login'
     });
 
     envServiceProvider.config({
@@ -32,6 +33,8 @@ angular.module('AdoBBS')
         }
       }
     });
+
+    envServiceProvider.check();
 
   }]);
 

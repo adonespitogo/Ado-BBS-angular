@@ -35,6 +35,8 @@ const VENDOR_JS = [
   './node_modules/angular-loading-bar/build/loading-bar.js',
   './node_modules/angular-recaptcha/release/angular-recaptcha.js',
   './node_modules/ado-ng-auth/dist/ado-ng-auth.js',
+  './node_modules/@adopisowifi/ng-timer-settings/ado-ng-timer-settings.js',
+  './node_modules/@adopisowifi/save-config-btn/src/save-config-btn.js',
 ]
 
 const APP_JS = [
