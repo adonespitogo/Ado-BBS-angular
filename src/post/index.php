@@ -3,10 +3,11 @@
 require("../php/helpers/env.php");
 require("../php/helpers/check_get_param.php");
 
-if (!checkGetParam("post_id") || !checkGetParam("topic"))
-  return header("Location: /");
+if (!checkGetParam("post_id"))
+  return header("HTTP/1.0 404 Not Found");
+  //return header("Location: /");
 if (!checkGetParam("page"))
-  return header("Location: /post/?post_id=".$_GET["post_id"]."&topic=".$_GET["topic"]."&page=1");
+  return header("Location: /post/?post_id=".$_GET["post_id"]."&page=1");
 
 $page= $_GET["page"];
 $post_api_url = $API_BASE_URL."/api/forum/posts/".$_GET["post_id"]."?page=".$page;
